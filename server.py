@@ -1,8 +1,8 @@
 import flask
-from agents import GroqAgent
+from agents import groqAgent
 
 agents = [
-    GroqAgent
+    groqAgent
 ]
 
 

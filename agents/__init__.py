@@ -1,1 +1,1 @@
-from .groq_client import GroqAgent
+from .groq_client import groqAgent
