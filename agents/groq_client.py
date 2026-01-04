@@ -4,7 +4,6 @@ import dotenv
 dotenv.load_dotenv()
 
 class GroqAgent:
-
     def __init__(self):
         self.client = Groq()
 
@@ -28,11 +27,15 @@ class GroqAgent:
             yield chunk.choices[0].delta.content or ""
 
     def test(self):
+        return self.generate("Fibbonai en python")
+    
+    def __str__(self):
+        return "Agent moonshotai/kimi-k2-instruct-0905 from Groq"
 
-        return self.generate("Fibbonazi en python")
+
+groqAgent = GroqAgent()
 
 if __name__ == "__main__":
-    groqAgent = GroqAgent()
     
     for chunk in groqAgent.test():
         print(chunk, end="")
