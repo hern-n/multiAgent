@@ -2,14 +2,11 @@ import flask
 from agents import groqAgent, cerebrasAgent, geminiAgent
 import json
 
-agents = [
-    groqAgent,
-    cerebrasAgent,
-    geminiAgent
-]
+agents = [groqAgent, cerebrasAgent, geminiAgent]
 
 
 app = flask.Flask(__name__)
+
 
 def load_current_agent():
     global current_agent
@@ -17,6 +14,7 @@ def load_current_agent():
         data = json.load(file)
 
         return data["current_agent"]
+
 
 def save_current_agent():
     global current_agent
@@ -27,8 +25,8 @@ def save_current_agent():
     with open("data.json", "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-current_agent = load_current_agent()
 
+current_agent = load_current_agent()
 
 
 def next_agent():
@@ -40,11 +38,28 @@ def next_agent():
 
 @app.route("/")
 def main():
-    return("Servidor ejecutándose correctamente.")
+    return "Servidor ejecutándose correctamente."
+
 
 @app.route("/agents", methods=["GET"])
 def show_agents():
-    return "<br>".join(str(agent) for agent in agents)
+
+    question = flask.request.args.get("question")
+
+    if question == None:
+        return "<br>".join(str(agent) for agent in agents)
+
+    else:
+        agent = next_agent()
+        data = flask.request.get_json(force=True)
+        question = data.get("question", "")
+
+        def generate():
+            for chunk in agent.generate(question):
+                yield chunk
+
+        return flask.Response(generate(), mimetype="text/plain")
+
 
 @app.route("/agents", methods=["POST"])
 def ask_agents():
