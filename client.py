@@ -31,7 +31,7 @@ def ask_agent_stream(question: str, url: str = "http://127.0.0.1:5000/agents", t
 
 if __name__ == "__main__":
 
-    q = "Fibonnacy en python"
+    q = "Primero dime que modelo eres, y depues: Puesdes hacerme Fibonnacci en python" 
     
     for chunk in ask_agent_stream(q):
         print(chunk, end="")
