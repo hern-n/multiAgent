@@ -43,22 +43,18 @@ def main():
 
 @app.route("/agents", methods=["GET"])
 def show_agents():
-
     question = flask.request.args.get("question")
-
-    if question == None:
+    if question is None:
         return "<br>".join(str(agent) for agent in agents)
-
     else:
         agent = next_agent()
-        data = flask.request.get_json(force=True)
-        question = data.get("question", "")
 
         def generate():
             for chunk in agent.generate(question):
                 yield chunk
 
         return flask.Response(generate(), mimetype="text/plain")
+
 
 
 @app.route("/agents", methods=["POST"])
