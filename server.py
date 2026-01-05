@@ -1,21 +1,40 @@
 import flask
-from agents import groqAgent, cerebrasAgent
+from agents import groqAgent, cerebrasAgent, geminiAgent
+import json
 
 agents = [
     groqAgent,
-    cerebrasAgent
+    cerebrasAgent,
+    geminiAgent
 ]
 
 
 app = flask.Flask(__name__)
 
-current_agent = 0
+def load_current_agent():
+    global current_agent
+    with open("data.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
 
-current_agent = 0
+        return data["current_agent"]
+
+def save_current_agent():
+    global current_agent
+    # Creamos directamente el diccionario con la clave y el valor
+    data = {"current_agent": current_agent}
+
+    # Guardamos en el JSON
+    with open("data.json", "w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+current_agent = load_current_agent()
+
+
 
 def next_agent():
     global current_agent
     current_agent = (current_agent + 1) % len(agents)
+    save_current_agent()
     return agents[current_agent]
 
 
